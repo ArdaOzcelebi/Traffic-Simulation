@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kızılay Canlı Trafik — Ankara</title>
+  <meta name="description" content="Ankara Kızılay Meydanı ve çevresindeki ana arterlerin anlık trafik yoğunluğunu gösteren interaktif harita simülasyonu." />
+
+  <!-- Leaflet.js -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Uygulama stilleri -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Yükleme Ekranı ──────────────────────────────── -->
+  <div id="loading-overlay">
+    <div class="loading-logo">🚦 Kızılay Trafik</div>
+    <div class="loading-spinner"></div>
+    <div class="loading-sub">Harita ve yol verisi yükleniyor…</div>
+    <div class="loading-status" id="loading-status">OpenStreetMap verisine bağlanılıyor…</div>
+  </div>
+
+  <!-- ── Leaflet Harita Konteyneri ───────────────────── -->
+  <div id="map"></div>
+
+  <!-- ── UI Katmanı ─────────────────────────────────── -->
+  <div id="ui-layer">
+
+    <!-- Dashboard (Sol Üst) -->
+    <div id="dashboard">
+      <!-- Başlık -->
+      <div class="dash-header">
+        <div class="dash-title">🗺 Kızılay Trafik</div>
+        <div class="live-badge">
+          <div class="live-dot"></div>
+          CANLI
+        </div>
+      </div>
+
+      <!-- İçerik -->
+      <div class="dash-body">
+
+        <!-- Simüle saat -->
+        <div class="time-block">
+          <div class="sim-time" id="sim-time">--:--</div>
+          <div class="sim-date" id="sim-date">Yükleniyor…</div>
+        </div>
+
+        <!-- Genel durum -->
+        <div class="overall-status free" id="overall-status">
+          <span class="status-label">Genel Durum</span>
+          <span class="status-value" id="overall-value">—</span>
+        </div>
+
+        <!-- Ortalama hız -->
+        <div class="avg-speed-block">
+          <span class="avg-speed-value" id="avg-speed">—</span>
+          <span>km/s ortalama hız</span>
+        </div>
+
+        <!-- Yol dağılımı -->
+        <div class="road-distribution">
+          <div class="dist-label">Yol Dağılımı</div>
+
+          <div class="dist-bar-row">
+            <div class="dist-dot" style="background:#22c55e;"></div>
+            <span class="dist-name">Akıcı</span>
+            <div class="dist-track">
+              <div class="dist-fill" id="bar-free" style="width:0%;background:#22c55e;"></div>
+            </div>
+            <span class="dist-count" id="cnt-free">0</span>
+          </div>
+
+          <div class="dist-bar-row">
+            <div class="dist-dot" style="background:#f97316;"></div>
+            <span class="dist-name">Yoğun</span>
+            <div class="dist-track">
+              <div class="dist-fill" id="bar-moderate" style="width:0%;background:#f97316;"></div>
+            </div>
+            <span class="dist-count" id="cnt-moderate">0</span>
+          </div>
+
+          <div class="dist-bar-row">
+            <div class="dist-dot" style="background:#ef4444;"></div>
+            <span class="dist-name">Çok Yoğun</span>
+            <div class="dist-track">
+              <div class="dist-fill" id="bar-heavy" style="width:0%;background:#ef4444;"></div>
+            </div>
+            <span class="dist-count" id="cnt-heavy">0</span>
+          </div>
+
+          <div class="dist-bar-row">
+            <div class="dist-dot" style="background:#991b1b;"></div>
+            <span class="dist-name">Kilit</span>
+            <div class="dist-track">
+              <div class="dist-fill" id="bar-jam" style="width:0%;background:#991b1b;"></div>
+            </div>
+            <span class="dist-count" id="cnt-jam">0</span>
+          </div>
+        </div>
+
+        <!-- Yol sayısı -->
+        <div class="road-count">
+          <span id="road-count-num">—</span> yol segmenti izleniyor
+        </div>
+
+      </div><!-- /dash-body -->
+    </div><!-- /dashboard -->
+
+    <!-- Renk Açıklaması (Sağ Alt) -->
+    <div id="legend">
+      <div class="legend-title">Trafik Durumu</div>
+
+      <div class="legend-item">
+        <div class="legend-line" style="background:#22c55e;"></div>
+        <div class="legend-text">
+          Akıcı
+          <span class="legend-sub">Hız sınırında</span>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <div class="legend-line" style="background:#f97316;"></div>
+        <div class="legend-text">
+          Yoğun
+          <span class="legend-sub">Hız sınırının ~%50'si</span>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <div class="legend-line" style="background:#ef4444;"></div>
+        <div class="legend-text">
+          Çok Yoğun
+          <span class="legend-sub">Hız sınırının ~%20'si</span>
+        </div>
+      </div>
+
+      <div class="legend-item">
+        <div class="legend-line" style="background:#991b1b;"></div>
+        <div class="legend-text">
+          Kilit
+          <span class="legend-sub">0 – 10 km/s</span>
+        </div>
+      </div>
+    </div><!-- /legend -->
+
+  </div><!-- /ui-layer -->
+
+  <!-- Uygulama mantığı -->
+  <script src="app.js"></script>
+</body>
+</html>

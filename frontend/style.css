@@ -1,0 +1,503 @@
+/* =========================================================
+   Kızılay Canlı Trafik Simülasyonu — Global Stiller
+   Dark mode + Glassmorphism + Inter/Outfit fonts
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+/* ─── Değişkenler ─────────────────────────────────────── */
+:root {
+  --bg-primary:      #080816;
+  --bg-secondary:    #0f0f23;
+  --bg-card:         rgba(15, 15, 35, 0.75);
+  --border-glass:    rgba(99, 102, 241, 0.20);
+  --accent:          #6366f1;
+  --accent-light:    #818cf8;
+  --accent-glow:     rgba(99, 102, 241, 0.35);
+  --text-primary:    #f1f5f9;
+  --text-secondary:  #94a3b8;
+  --text-muted:      #475569;
+  --green:           #22c55e;
+  --orange:          #f97316;
+  --red:             #ef4444;
+  --dark-red:        #991b1b;
+  --radius-lg:       16px;
+  --radius-md:       10px;
+  --radius-sm:       6px;
+  --shadow-glow:     0 0 30px rgba(99, 102, 241, 0.15);
+  --shadow-card:     0 8px 32px rgba(0, 0, 0, 0.45);
+  --transition:      all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Reset & Base ────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* ─── Harita Konteyneri ───────────────────────────────── */
+#map {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+}
+
+/* ─── UI Katmanı ──────────────────────────────────────── */
+#ui-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  pointer-events: none;
+}
+
+#ui-layer > * {
+  pointer-events: all;
+}
+
+/* ─── Dashboard Paneli (Sol Üst) ─────────────────────── */
+#dashboard {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 300px;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card), var(--shadow-glow);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+#dashboard:hover {
+  border-color: rgba(99, 102, 241, 0.40);
+  box-shadow: var(--shadow-card), 0 0 45px rgba(99, 102, 241, 0.25);
+}
+
+/* Dashboard başlık şeridi */
+.dash-header {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.30) 0%, rgba(139, 92, 246, 0.20) 100%);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.dash-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+}
+
+/* Canlı nokta animasyonu */
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--green);
+  letter-spacing: 0.06em;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.7; }
+}
+
+/* Dashboard içerik */
+.dash-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Saat bloku */
+.time-block {
+  text-align: center;
+  padding: 12px;
+  background: rgba(99, 102, 241, 0.08);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(99, 102, 241, 0.12);
+}
+
+.sim-time {
+  font-family: 'Outfit', sans-serif;
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #f1f5f9, var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sim-date {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Genel durum etiketi */
+.overall-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid;
+  transition: var(--transition);
+}
+
+.overall-status.free     { background: rgba(34,197,94,0.10);  border-color: rgba(34,197,94,0.25);  }
+.overall-status.moderate { background: rgba(249,115,22,0.10); border-color: rgba(249,115,22,0.25); }
+.overall-status.heavy    { background: rgba(239,68,68,0.10);  border-color: rgba(239,68,68,0.25);  }
+.overall-status.jam      { background: rgba(127,29,29,0.20);  border-color: rgba(239,68,68,0.40);  }
+
+.status-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.status-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Ortalama hız */
+.avg-speed-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.avg-speed-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent-light);
+}
+
+/* Yol dağılımı çubukları */
+.road-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dist-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+}
+
+.dist-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dist-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dist-name {
+  font-size: 11px;
+  color: var(--text-secondary);
+  width: 75px;
+  flex-shrink: 0;
+}
+
+.dist-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.dist-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dist-count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  width: 20px;
+  text-align: right;
+}
+
+/* Yol bilgisi sayacı */
+.road-count {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding-top: 4px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.road-count span {
+  color: var(--accent-light);
+  font-weight: 600;
+}
+
+/* ─── Renk Açıklaması (Sağ Alt) ─────────────────────── */
+#legend {
+  position: absolute;
+  bottom: 30px;
+  right: 20px;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  box-shadow: var(--shadow-card);
+  min-width: 180px;
+}
+
+.legend-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+
+.legend-item:last-child { margin-bottom: 0; }
+
+.legend-line {
+  width: 32px;
+  height: 5px;
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+
+.legend-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legend-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+  display: block;
+}
+
+/* ─── Yükleme Overlay ─────────────────────────────────── */
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#loading-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loading-logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.loading-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.loading-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid rgba(99, 102, 241, 0.15);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-status {
+  font-size: 12px;
+  color: var(--text-muted);
+  animation: fade-in-out 2s ease infinite;
+}
+
+@keyframes fade-in-out {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1;   }
+}
+
+/* ─── Leaflet Özel Popup Stilleri ────────────────────── */
+.leaflet-popup-content-wrapper {
+  background: var(--bg-card) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid var(--border-glass) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-card) !important;
+  color: var(--text-primary) !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(15, 15, 35, 0.90) !important;
+}
+
+.leaflet-popup-close-button {
+  color: var(--text-muted) !important;
+  font-size: 18px !important;
+  top: 8px !important;
+  right: 10px !important;
+}
+
+.leaflet-popup-close-button:hover {
+  color: var(--text-primary) !important;
+}
+
+/* Popup içerik */
+.popup-container {
+  font-family: 'Inter', sans-serif;
+  min-width: 200px;
+  padding: 4px 0;
+}
+
+.popup-road-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.popup-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.popup-row:last-child { margin-bottom: 0; }
+
+.popup-key {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.popup-val {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.popup-status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.badge-free     { background: rgba(34,197,94,0.15);  color: #4ade80; }
+.badge-moderate { background: rgba(249,115,22,0.15); color: #fb923c; }
+.badge-heavy    { background: rgba(239,68,68,0.15);  color: #f87171; }
+.badge-jam      { background: rgba(127,29,29,0.25);  color: #fca5a5; }
+
+/* ─── Leaflet Attribution ────────────────────────────── */
+.leaflet-control-attribution {
+  background: rgba(8, 8, 22, 0.80) !important;
+  color: var(--text-muted) !important;
+  font-size: 10px !important;
+  padding: 2px 8px !important;
+  border-radius: 4px 0 0 0 !important;
+}
+
+.leaflet-control-attribution a {
+  color: var(--accent-light) !important;
+}
+
+/* ─── Zoom kontrolleri ───────────────────────────────── */
+.leaflet-control-zoom a {
+  background: var(--bg-card) !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid var(--border-glass) !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: rgba(99,102,241,0.20) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
