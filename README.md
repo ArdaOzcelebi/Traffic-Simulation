@@ -55,4 +55,4 @@ Tarayıcıda aç: **http://localhost:3000**
 | 🟢 Yeşil | Akıcı | Hız sınırında |
 | 🟠 Turuncu | Yoğun | ~%50'si |
 | 🔴 Kırmızı | Çok Yoğun | ~%20'si |
-| ⬛ Koyu Kırmızı | Kilit | 0–10 km/s |
+| ⬛ Koyu Kırmızı | Kilit | 0–10 km/h |
