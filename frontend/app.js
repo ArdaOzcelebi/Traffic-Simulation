@@ -72,11 +72,10 @@ const map = L.map('map', {
   preferCanvas: true,
 });
 
-// CartoDB Dark Matter tile
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> katkıcıları &copy; <a href="https://carto.com/">CARTO</a>',
-  subdomains: 'abcd',
-  maxZoom: 20,
+// OpenStreetMap tile (keyless) + dark mode filter in CSS tile pane
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> katkıcıları',
+  maxZoom: 19,
 }).addTo(map);
 
 // ─────────────────────────────────────────────────────────────
@@ -114,7 +113,7 @@ function buildPopupHTML(roadId, trafficData) {
   const highway     = meta.highway     || '—';
   const speedLimit  = meta.speed_limit || '—';
   const curSpeed    = traffic.current_speed != null
-    ? traffic.current_speed.toFixed(0) + ' km/s'
+    ? traffic.current_speed.toFixed(0) + ' km/h'
     : '—';
   const density     = traffic.density_level || 'free';
   const label       = traffic.label         || 'Akıcı';
@@ -137,7 +136,7 @@ function buildPopupHTML(roadId, trafficData) {
       </div>
       <div class="popup-row">
         <span class="popup-key">Hız Sınırı</span>
-        <span class="popup-val">${speedLimit} km/s</span>
+        <span class="popup-val">${speedLimit} km/h</span>
       </div>
       <div class="popup-row">
         <span class="popup-key">Anlık Hız</span>
