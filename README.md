@@ -17,6 +17,16 @@ pip install -r requirements.txt
 
 ## Çalıştırma
 
+### 1) Tek HTML ile (Backend olmadan)
+
+`/frontend/index.html` dosyasını doğrudan tarayıcıda açabilirsiniz (çift tık / sürükle-bırak).
+
+- Uygulama önce canlı OSM yol verisini tarayıcıdan çekmeyi dener.
+- Erişilemezse otomatik olarak gömülü fallback yol verisine geçer.
+- Tüm trafik simülasyonu frontend içinde çalışır.
+
+### 2) Backend + Frontend (mevcut mimari)
+
 **Terminal 1 — Backend:**
 ```powershell
 uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
